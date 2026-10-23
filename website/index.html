@@ -620,11 +620,11 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <form class="reveal" id="form">
       <h3>Заявете безплатен преглед</h3>
       <div class="row">
-        <label>Име<input name="Име" required autocomplete="name"></label>
-        <label>Фирма<input name="Фирма" required autocomplete="organization"></label>
+        <label>Име<input name="Име" required minlength="2" maxlength="80" autocomplete="name"></label>
+        <label>Фирма<input name="Фирма" required minlength="2" maxlength="120" autocomplete="organization"></label>
       </div>
       <div class="row">
-        <label>Телефон<input name="Телефон" type="tel" autocomplete="tel"></label>
+        <label>Телефон<input name="Телефон" type="tel" maxlength="20" pattern="[0-9+ ()\-]{6,20}" title="Само цифри, интервали и +" autocomplete="tel"></label>
         <label>Имейл<input name="email" type="email" required autocomplete="email"></label>
       </div>
       <label>Брой служители
@@ -632,8 +632,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
           <option>до 10</option><option>11 – 50</option><option>51 – 250</option><option>над 250</option>
         </select>
       </label>
-      <label>Съобщение<textarea name="Съобщение" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
+      <label>Съобщение<textarea name="Съобщение" maxlength="2000" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="h-captcha" data-captcha="true" id="captcha" hidden></div>
       <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
       <p class="form-status" id="status" role="status" aria-live="polite" hidden></p>
       <p class="fine">Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на работния ден.</p>
@@ -684,26 +685,58 @@ const track=document.getElementById('track');
 track.innerHTML+=track.innerHTML;
 track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=12)el.setAttribute('aria-hidden','true')});
 
-// contact form -> sends straight to office@life-04.com via FormSubmit
+// contact form -> sends straight to office@life-04.com
+// Spam protection: honeypot field, minimum fill time, limits per browser, link filter.
+// To switch on hCaptcha: create a free Web3Forms access key for office@life-04.com and paste it below.
+const WEB3FORMS_KEY='';
+// After FormSubmit activation you can replace the address with the private alias it emails you.
+const FORMSUBMIT_ENDPOINT='https://formsubmit.co/ajax/office@life-04.com';
+const MIN_FILL_MS=4000, GAP_MS=60*1000, MAX_PER_HOUR=3;
+
 const form=document.getElementById('form'),send=document.getElementById('send'),status=document.getElementById('status');
-const sendLabel=send.innerHTML;
+const sendLabel=send.innerHTML, openedAt=Date.now();
 const showStatus=(msg,ok)=>{status.textContent=msg;status.className='form-status '+(ok?'ok':'err');status.hidden=false};
+const fallback=' Можете да пишете и на office@life-04.com или да се обадите на +359 897 932 200.';
+
+if(WEB3FORMS_KEY){
+  document.getElementById('captcha').hidden=false;
+  const sc=document.createElement('script');sc.src='https://web3forms.com/client/script.js';sc.async=true;sc.defer=true;document.body.appendChild(sc);
+}
+const readLog=()=>{try{return JSON.parse(localStorage.getItem('life04-sent')||'[]').filter(t=>Date.now()-t<3600e3)}catch{return []}};
+const writeLog=l=>{try{localStorage.setItem('life04-sent',JSON.stringify(l))}catch{}};
+
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const data=Object.fromEntries(new FormData(form));
-  if(data._honey)return;
-  data._subject='Запитване за безплатен преглед – '+data['Фирма'];
-  data._template='table';
+  // bots fill the hidden field: pretend success, send nothing
+  if(data._honey){form.reset();showStatus('Благодарим! Запитването е изпратено.',true);return}
+  delete data._honey;
+  if(Date.now()-openedAt<MIN_FILL_MS){showStatus('Моля, проверете данните и натиснете бутона отново.',false);return}
+  const log=readLog();
+  if(log.length&&Date.now()-log[log.length-1]<GAP_MS){showStatus('Запитването ви вече е изпратено. Моля, изчакайте минута преди да изпратите ново.',false);return}
+  if(log.length>=MAX_PER_HOUR){showStatus('Достигнат е лимитът от запитвания за един час.'+fallback,false);return}
+  if((String(data['Съобщение']).match(/https?:\/\/|www\./gi)||[]).length>1){showStatus('Моля, премахнете връзките (линковете) от съобщението.',false);return}
+  if(WEB3FORMS_KEY&&!data['h-captcha-response']){showStatus('Моля, потвърдете, че не сте робот.',false);return}
+
+  const subject='Запитване за безплатен преглед – '+data['Фирма'];
+  let url,payload;
+  if(WEB3FORMS_KEY){url='https://api.web3forms.com/submit';payload={...data,access_key:WEB3FORMS_KEY,subject,from_name:'Сайт Лайф-04',replyto:data.email}}
+  else{url=FORMSUBMIT_ENDPOINT;payload={...data,_subject:subject,_template:'table'}}
+
   send.disabled=true;send.textContent='Изпращане…';status.hidden=true;
   try{
-    const r=await fetch('https://formsubmit.co/ajax/office@life-04.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)});
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
     const j=await r.json().catch(()=>({}));
     if(!r.ok||String(j.success)!=='true')throw new Error(j.message||r.status);
+    writeLog([...log,Date.now()]);
     form.reset();
     showStatus('Благодарим! Запитването е изпратено. Ще се свържем с вас в рамките на работния ден.',true);
   }catch(err){
-    showStatus('Запитването не можа да бъде изпратено. Моля, опитайте отново или пишете на office@life-04.com / +359 897 932 200.',false);
-  }finally{send.disabled=false;send.innerHTML=sendLabel}
+    showStatus('Запитването не можа да бъде изпратено.'+fallback,false);
+  }finally{
+    send.disabled=false;send.innerHTML=sendLabel;
+    if(WEB3FORMS_KEY&&window.hcaptcha)try{hcaptcha.reset()}catch{}
+  }
 });
 document.getElementById('y').textContent=new Date().getFullYear();
 </script>
