@@ -54,11 +54,15 @@ header.scrolled .logo{color:var(--ink)}
 header.scrolled .menu a{color:var(--slate)}
 header.scrolled .menu a:hover{color:var(--accent)}
 .menu .btn{padding:10px 20px;color:#fff!important}
-.lang{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.1)}
-.menu .lang a{padding:5px 10px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.04em}
-.menu .lang a[aria-current]{background:#fff;color:var(--ink)}
-header.scrolled .lang{background:var(--mist)}
-header.scrolled .menu .lang a[aria-current]{background:var(--ink);color:#fff}
+.nav-end{display:flex;align-items:center;gap:24px}
+.lang{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)}
+.lang a{padding:6px 11px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.04em;color:rgba(255,255,255,.85);transition:.2s}
+.lang a:hover{color:#fff}
+.lang a[aria-current]{background:#fff;color:var(--ink)}
+header.scrolled .lang{background:var(--mist);border-color:var(--line)}
+header.scrolled .lang a{color:var(--slate)}
+header.scrolled .lang a:hover{color:var(--accent)}
+header.scrolled .lang a[aria-current]{background:var(--ink);color:#fff}
 .burger{display:none;background:none;border:0;color:#fff;cursor:pointer}
 header.scrolled .burger{color:var(--ink)}
 
@@ -266,9 +270,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .menu.open{transform:none}
   .menu a{color:var(--ink)!important;padding:12px 4px;border-bottom:1px solid var(--mist)}
   .menu .btn{justify-content:center;margin-top:12px;border:0}
-  .lang{align-self:flex-start;margin-top:10px;background:var(--mist)}
-  .menu .lang a{border:0;padding:8px 14px}
-  .menu .lang a[aria-current]{background:var(--ink);color:#fff!important}
+  .nav-end{gap:10px}
   .burger{display:block}
 }
 @media (max-width:700px){
@@ -325,16 +327,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <span class="logo-mark"><svg class="i"><use href="#i-shield"/></svg></span>
       <span>Лайф-04<small>Служба по трудова медицина</small></span>
     </a>
+    <div class="nav-end">
     <nav class="menu" id="menu">
       <a href="#about">За нас</a>
       <a href="#services">Услуги</a>
       <a href="#process">Как работим</a>
       <a href="#experience">Опит</a>
       <a href="#team">Екип</a>
-      <span class="lang" aria-label="Език"><a href="index.html" lang="bg" aria-current="page">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de">DE</a></span>
       <a href="#contact" class="btn btn-primary">Безплатен преглед</a>
     </nav>
+    <span class="lang" aria-label="Език"><a href="index.html" lang="bg" aria-current="page">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de">DE</a></span>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><svg class="i" style="width:28px;height:28px"><use href="#i-menu"/></svg></button>
+    </div>
   </div>
 </header>
 
