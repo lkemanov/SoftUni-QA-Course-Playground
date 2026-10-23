@@ -229,6 +229,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 textarea{min-height:96px;resize:vertical}
 form .btn{justify-content:center}
 .fine{font-size:.78rem;color:var(--muted)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.form-status{padding:14px 16px;border-radius:12px;font-weight:600;font-size:.93rem}
+.form-status.ok{background:#E3F1EA;color:#25704A}
+.form-status.err{background:#F8E3E0;color:#A33A2C}
+form .btn:disabled{opacity:.7;cursor:wait;transform:none}
 
 footer{background:#132A33;color:rgba(255,255,255,.6);padding:36px 0;font-size:.88rem}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -615,21 +620,23 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <form class="reveal" id="form">
       <h3>Заявете безплатен преглед</h3>
       <div class="row">
-        <label>Име<input name="name" required autocomplete="name"></label>
-        <label>Фирма<input name="company" required autocomplete="organization"></label>
+        <label>Име<input name="Име" required autocomplete="name"></label>
+        <label>Фирма<input name="Фирма" required autocomplete="organization"></label>
       </div>
       <div class="row">
-        <label>Телефон<input name="phone" type="tel" autocomplete="tel"></label>
+        <label>Телефон<input name="Телефон" type="tel" autocomplete="tel"></label>
         <label>Имейл<input name="email" type="email" required autocomplete="email"></label>
       </div>
       <label>Брой служители
-        <select name="size">
+        <select name="Брой служители">
           <option>до 10</option><option>11 – 50</option><option>51 – 250</option><option>над 250</option>
         </select>
       </label>
-      <label>Съобщение<textarea name="msg" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
-      <button class="btn btn-primary" type="submit">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
-      <p class="fine">Формата отваря имейл до office@life-04.com с попълнените данни.</p>
+      <label>Съобщение<textarea name="Съобщение" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
+      <p class="form-status" id="status" role="status" aria-live="polite" hidden></p>
+      <p class="fine">Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на работния ден.</p>
     </form>
   </div>
 </section>
@@ -677,11 +684,26 @@ const track=document.getElementById('track');
 track.innerHTML+=track.innerHTML;
 track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=12)el.setAttribute('aria-hidden','true')});
 
-// contact form -> mailto
-document.getElementById('form').addEventListener('submit',e=>{
-  e.preventDefault();const f=new FormData(e.target);
-  const body=`Име: ${f.get('name')}\nФирма: ${f.get('company')}\nТелефон: ${f.get('phone')}\nИмейл: ${f.get('email')}\nБрой служители: ${f.get('size')}\n\n${f.get('msg')}`;
-  location.href=`mailto:office@life-04.com?subject=${encodeURIComponent('Запитване за безплатен преглед – '+f.get('company'))}&body=${encodeURIComponent(body)}`;
+// contact form -> sends straight to office@life-04.com via FormSubmit
+const form=document.getElementById('form'),send=document.getElementById('send'),status=document.getElementById('status');
+const sendLabel=send.innerHTML;
+const showStatus=(msg,ok)=>{status.textContent=msg;status.className='form-status '+(ok?'ok':'err');status.hidden=false};
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const data=Object.fromEntries(new FormData(form));
+  if(data._honey)return;
+  data._subject='Запитване за безплатен преглед – '+data['Фирма'];
+  data._template='table';
+  send.disabled=true;send.textContent='Изпращане…';status.hidden=true;
+  try{
+    const r=await fetch('https://formsubmit.co/ajax/office@life-04.com',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(data)});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||String(j.success)!=='true')throw new Error(j.message||r.status);
+    form.reset();
+    showStatus('Благодарим! Запитването е изпратено. Ще се свържем с вас в рамките на работния ден.',true);
+  }catch(err){
+    showStatus('Запитването не можа да бъде изпратено. Моля, опитайте отново или пишете на office@life-04.com / +359 897 932 200.',false);
+  }finally{send.disabled=false;send.innerHTML=sendLabel}
 });
 document.getElementById('y').textContent=new Date().getFullYear();
 </script>
