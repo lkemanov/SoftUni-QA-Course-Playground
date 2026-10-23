@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>СТМ Лайф-04 | Служба по трудова медицина</title>
 <meta name="description" content="СТМ „Лайф-04“ ООД – регистрирана служба по трудова медицина от 2004 г. Оценка на риска, медицинско наблюдение, обучения и документация по ЗЗБУТ в 15 области на България.">
+<link rel="alternate" hreflang="bg" href="index.html">
+<link rel="alternate" hreflang="en" href="en.html">
+<link rel="alternate" hreflang="de" href="de.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -51,6 +54,11 @@ header.scrolled .logo{color:var(--ink)}
 header.scrolled .menu a{color:var(--slate)}
 header.scrolled .menu a:hover{color:var(--accent)}
 .menu .btn{padding:10px 20px;color:#fff!important}
+.lang{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.1)}
+.menu .lang a{padding:5px 10px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.04em}
+.menu .lang a[aria-current]{background:#fff;color:var(--ink)}
+header.scrolled .lang{background:var(--mist)}
+header.scrolled .menu .lang a[aria-current]{background:var(--ink);color:#fff}
 .burger{display:none;background:none;border:0;color:#fff;cursor:pointer}
 header.scrolled .burger{color:var(--ink)}
 
@@ -258,6 +266,9 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .menu.open{transform:none}
   .menu a{color:var(--ink)!important;padding:12px 4px;border-bottom:1px solid var(--mist)}
   .menu .btn{justify-content:center;margin-top:12px;border:0}
+  .lang{align-self:flex-start;margin-top:10px;background:var(--mist)}
+  .menu .lang a{border:0;padding:8px 14px}
+  .menu .lang a[aria-current]{background:var(--ink);color:#fff!important}
   .burger{display:block}
 }
 @media (max-width:700px){
@@ -320,6 +331,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <a href="#process">Как работим</a>
       <a href="#experience">Опит</a>
       <a href="#team">Екип</a>
+      <span class="lang" aria-label="Език"><a href="index.html" lang="bg" aria-current="page">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de">DE</a></span>
       <a href="#contact" class="btn btn-primary">Безплатен преглед</a>
     </nav>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><svg class="i" style="width:28px;height:28px"><use href="#i-menu"/></svg></button>
@@ -622,7 +634,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <h3>Заявете безплатен преглед</h3>
       <div class="row">
         <label>Име<input name="Име" required minlength="2" maxlength="80" autocomplete="name"></label>
-        <label>Фирма<input name="Фирма" required minlength="2" maxlength="120" autocomplete="organization"></label>
+        <label>Фирма<input name="Фирма" id="f-company" required minlength="2" maxlength="120" autocomplete="organization"></label>
       </div>
       <div class="row">
         <label>Телефон<input name="Телефон" type="tel" maxlength="20" pattern="[0-9+ ()\-]{6,20}" title="Само цифри, интервали и +" autocomplete="tel"></label>
@@ -633,7 +645,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
           <option>до 10</option><option>11 – 50</option><option>51 – 250</option><option>над 250</option>
         </select>
       </label>
-      <label>Съобщение<textarea name="Съобщение" maxlength="2000" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
+      <label>Съобщение<textarea name="Съобщение" id="f-msg" maxlength="2000" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="h-captcha" data-captcha="true" data-hl="bg" id="captcha"></div>
       <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
@@ -713,10 +725,10 @@ form.addEventListener('submit',async e=>{
   const log=readLog();
   if(log.length&&Date.now()-log[log.length-1]<GAP_MS){showStatus('Запитването ви вече е изпратено. Моля, изчакайте минута преди да изпратите ново.',false);return}
   if(log.length>=MAX_PER_HOUR){showStatus('Достигнат е лимитът от запитвания за един час.'+fallback,false);return}
-  if((String(data['Съобщение']).match(/https?:\/\/|www\./gi)||[]).length>1){showStatus('Моля, премахнете връзките (линковете) от съобщението.',false);return}
+  if((document.getElementById('f-msg').value.match(/https?:\/\/|www\./gi)||[]).length>1){showStatus('Моля, премахнете връзките (линковете) от съобщението.',false);return}
   if(!data['h-captcha-response']){showStatus('Моля, потвърдете, че не сте робот.',false);return}
 
-  const subject='Запитване за безплатен преглед – '+data['Фирма'];
+  const subject='Запитване за безплатен преглед – '+document.getElementById('f-company').value;
   let url,payload;
   if(WEB3FORMS_KEY){url='https://api.web3forms.com/submit';payload={...data,access_key:WEB3FORMS_KEY,subject,from_name:'Сайт Лайф-04',replyto:data.email}}
   else{delete data['h-captcha-response'];url=FORMSUBMIT_ENDPOINT;payload={...data,_subject:subject,_template:'table'}}
