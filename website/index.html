@@ -240,6 +240,7 @@ form{background:#fff;color:var(--ink);border-radius:24px;padding:clamp(24px,4vw,
 form h3{font-size:1.5rem}
 form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 label{font-size:.82rem;font-weight:700;color:var(--slate);display:grid;gap:6px}
+.req{color:var(--accent);font-weight:800}
 input,select,textarea{font:inherit;padding:13px 15px;border:1px solid var(--line);border-radius:12px;background:var(--mist);color:var(--ink);width:100%;transition:.2s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px var(--accent-soft)}
 textarea{min-height:96px;resize:vertical}
@@ -658,14 +659,14 @@ footer a:hover{color:#fff}
       </div>
     </div>
     <form class="reveal" id="form">
-      <h3>Заявете безплатен преглед</h3>
+      <h3>Изпрати запитване</h3>
       <div class="row">
         <label>Име<input name="Име" required minlength="2" maxlength="80" autocomplete="name"></label>
         <label>Фирма<input name="Фирма" id="f-company" required minlength="2" maxlength="120" autocomplete="organization"></label>
       </div>
       <div class="row">
-        <label>Телефон<input name="Телефон" type="tel" maxlength="20" pattern="[0-9+ ()\-]{6,20}" title="Само цифри, интервали и +" autocomplete="tel"></label>
-        <label>Имейл<input name="email" type="email" required autocomplete="email"></label>
+        <label><span>Телефон <span class="req" aria-hidden="true">*</span></span><input name="Телефон" id="f-phone" type="tel" required maxlength="20" pattern="[0-9+ ()\-]{6,20}" title="Само цифри, интервали и +" autocomplete="tel"></label>
+        <label><span>Имейл <span class="req" aria-hidden="true">*</span></span><input name="email" type="email" required autocomplete="email"></label>
       </div>
       <label>Брой служители
         <select name="Брой служители">
@@ -753,6 +754,7 @@ form.addEventListener('submit',async e=>{
   const log=readLog();
   if(log.length&&Date.now()-log[log.length-1]<GAP_MS){showStatus('Запитването ви вече е изпратено. Моля, изчакайте минута преди да изпратите ново.',false);return}
   if(log.length>=MAX_PER_HOUR){showStatus('Достигнат е лимитът от запитвания за един час.'+fallback,false);return}
+  if((document.getElementById('f-phone').value.match(/\d/g)||[]).length<6){showStatus('Моля, въведете валиден телефонен номер.',false);return}
   if((document.getElementById('f-msg').value.match(/https?:\/\/|www\./gi)||[]).length>1){showStatus('Моля, премахнете връзките (линковете) от съобщението.',false);return}
   if(!data['h-captcha-response']){showStatus('Моля, потвърдете, че не сте робот.',false);return}
 
