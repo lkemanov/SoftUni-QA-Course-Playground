@@ -661,8 +661,8 @@ footer a:hover{color:#fff}
     <form class="reveal" id="form">
       <h3>Изпрати запитване</h3>
       <div class="row">
-        <label>Име<input name="Име" required minlength="2" maxlength="80" autocomplete="name"></label>
-        <label>Фирма<input name="Фирма" id="f-company" required minlength="2" maxlength="120" autocomplete="organization"></label>
+        <label>Име<input name="Име" maxlength="80" autocomplete="name"></label>
+        <label><span>Фирма <span class="req" aria-hidden="true">*</span></span><input name="Фирма" id="f-company" required minlength="2" maxlength="120" autocomplete="organization"></label>
       </div>
       <div class="row">
         <label><span>Телефон <span class="req" aria-hidden="true">*</span></span><input name="Телефон" id="f-phone" type="tel" required maxlength="20" pattern="[0-9+ ()\-]{6,20}" title="Само цифри, интервали и +" autocomplete="tel"></label>
