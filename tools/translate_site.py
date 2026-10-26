@@ -1,7 +1,10 @@
-"""Build the English and German pages from the Bulgarian website/index.html.
+"""Build the English and German pages from the Bulgarian source pages.
 
-Run after every change to index.html:  python3 tools/translate_site.py
-Each Bulgarian phrase must exist in index.html; the script stops if one is
+  website/index.html   -> en.html, de.html
+  website/privacy.html -> privacy-en.html, privacy-de.html
+
+Run after every change to a Bulgarian page:  python3 tools/translate_site.py
+Each Bulgarian phrase must exist in its page; the script stops if one is
 missing or if any Cyrillic text is left untranslated.
 """
 import re
@@ -11,7 +14,7 @@ from pathlib import Path
 SITE = Path(__file__).resolve().parent.parent / "website"
 
 # (Bulgarian, English, German). Longer phrases are replaced first.
-T = [
+T_INDEX = [
     # head, navigation, accessibility labels
     ('<html lang="bg">', '<html lang="en">', '<html lang="de">'),
     ("<title>СТМ Лайф-04 | Служба по трудова медицина</title>",
@@ -273,8 +276,16 @@ T = [
      "Your enquiry goes straight to office@life-04.com. We will get back to you within the working day.",
      "Ihre Anfrage geht direkt an office@life-04.com. Wir melden uns innerhalb eines Arbeitstages."),
 
-    # footer
-    ("СТМ „Лайф-04“ ООД · Удостоверение № 052-3 от МЗ", "STM Life-04 Ltd · Ministry of Health registration No. 052-3", "STM Life-04 OOD · Registrierung Gesundheitsministerium Nr. 052-3"),
+    # consent and footer
+    ('href="privacy.html"', 'href="privacy-en.html"', 'href="privacy-de.html"'),
+    ("<span>Запознах се с <a", "<span>I have read the <a", "<span>Ich habe die <a"),
+    (">Политиката за поверителност</a> и знам как ще бъдат използвани данните ми.</span>",
+     ">Privacy Policy</a> and know how my data will be used.</span>",
+     ">Datenschutzerklärung</a> gelesen und weiß, wie meine Daten verwendet werden.</span>"),
+    ("СТМ „Лайф-04“ ООД · ЕИК [предстои] · София 1309, ул. „Зайчар“ № 125 · Удостоверение № 052-3 от МЗ",
+     "STM Life-04 Ltd · Company ID (EIK) [pending] · 125 Zaychar St., 1309 Sofia, Bulgaria · Ministry of Health registration No. 052-3",
+     "STM Life-04 OOD · Firmennummer (EIK) [folgt] · ul. Zaychar 125, 1309 Sofia, Bulgarien · Registrierung Gesundheitsministerium Nr. 052-3"),
+    (">Политика за поверителност</a><a", ">Privacy Policy</a><a", ">Datenschutz</a><a"),
 
     # form messages (script)
     ("' Можете да пишете и на office@life-04.com или да се обадите на +359 897 932 200.'",
@@ -297,33 +308,118 @@ T = [
     ("'Запитване за безплатен преглед – '", "'Запитване за безплатен преглед (EN) – '", "'Запитване за безплатен преглед (DE) – '"),
 ]
 
-# switcher: mark the current language
-SWITCH_BG = '<a href="index.html" lang="bg" aria-current="page">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de">DE</a>'
-SWITCH = {
-    "en": '<a href="index.html" lang="bg">BG</a><a href="en.html" lang="en" aria-current="page">EN</a><a href="de.html" lang="de">DE</a>',
-    "de": '<a href="index.html" lang="bg">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de" aria-current="page">DE</a>',
+T_PRIVACY = [
+    ('<html lang="bg">', '<html lang="en">', '<html lang="de">'),
+    ("<title>Политика за поверителност | СТМ Лайф-04</title>", "<title>Privacy Policy | Life-04</title>", "<title>Datenschutzerklärung | Life-04</title>"),
+    ("Как СТМ „Лайф-04“ ООД обработва личните данни, изпратени чрез сайта.",
+     "How STM Life-04 Ltd processes personal data sent through this website.",
+     "Wie die STM Life-04 OOD personenbezogene Daten verarbeitet, die über diese Website gesendet werden."),
+    ('href="index.html"', 'href="en.html"', 'href="de.html"'),
+    ("</svg></span>Лайф-04</a>", "</svg></span>Life-04</a>", "</svg></span>Life-04</a>"),
+    ('aria-label="Език"', 'aria-label="Language"', 'aria-label="Sprache"'),
+    ("<h1>Политика за поверителност</h1>", "<h1>Privacy Policy</h1>", "<h1>Datenschutzerklärung</h1>"),
+    ("В сила от 26 октомври 2026 г.", "Effective from 26 October 2026", "Gültig ab 26. Oktober 2026"),
+    ("Тази политика обяснява какви лични данни събираме чрез сайта, защо и как ги пазим. Тя се отнася само до сайта и формата за запитване. Здравните данни на служителите на нашите клиенти се обработват по отделни правила, уговорени в договора за трудовомедицинско обслужване.",
+     "This policy explains what personal data we collect through this website, why, and how we protect it. It covers only the website and the enquiry form. Health data of our clients’ employees is processed under separate rules agreed in the occupational health service contract.",
+     "Diese Erklärung beschreibt, welche personenbezogenen Daten wir über die Website erheben, warum und wie wir sie schützen. Sie gilt nur für die Website und das Anfrageformular. Gesundheitsdaten der Mitarbeiter unserer Kunden werden nach gesonderten Regeln verarbeitet, die im Vertrag über die arbeitsmedizinische Betreuung vereinbart sind."),
+    ("<h2>1. Кой отговаря за данните</h2>", "<h2>1. Who is responsible for your data</h2>", "<h2>1. Verantwortlicher</h2>"),
+    ("СТМ „Лайф-04“ ООД, ЕИК [предстои], адрес: София 1309, ул. „Зайчар“ № 125, офис 2. Имейл:",
+     "STM Life-04 Ltd, company ID (EIK) [pending], address: 125 Zaychar St., office 2, 1309 Sofia, Bulgaria. Email:",
+     "STM Life-04 OOD, Firmennummer (EIK) [folgt], Anschrift: ul. Zaychar 125, Büro 2, 1309 Sofia, Bulgarien. E-Mail:"),
+    (", телефон: +359 897 932 200.", ", phone: +359 897 932 200.", ", Telefon: +359 897 932 200."),
+    ("<h2>2. Какви данни събираме</h2>", "<h2>2. What data we collect</h2>", "<h2>2. Welche Daten wir erheben</h2>"),
+    ("Когато изпратите запитване, получаваме данните, които сами въведете във формата:",
+     "When you send an enquiry, we receive the data you enter in the form:",
+     "Wenn Sie eine Anfrage senden, erhalten wir die Daten, die Sie im Formular eingeben:"),
+    ("<li>име, фирма, телефон и имейл;</li>", "<li>name, company, phone and email;</li>", "<li>Name, Firma, Telefon und E-Mail;</li>"),
+    ("<li>брой служители и текста на съобщението.</li>", "<li>number of employees and the text of your message.</li>", "<li>Mitarbeiterzahl und den Text Ihrer Nachricht.</li>"),
+    ("Моля, не изпращайте чрез формата здравна информация за себе си или за служители. Тя не е нужна за запитването.",
+     "Please do not send health information about yourself or your employees through the form. It is not needed for an enquiry.",
+     "Bitte senden Sie über das Formular keine Gesundheitsinformationen über sich oder Ihre Mitarbeiter. Für eine Anfrage sind sie nicht erforderlich."),
+    ("<h2>3. Защо ги използваме и на какво основание</h2>", "<h2>3. Why we use it and on what legal basis</h2>", "<h2>3. Zweck und Rechtsgrundlage</h2>"),
+    ("Използваме данните само за да отговорим на запитването ви, да подготвим оферта и, ако решите, да сключим договор. Основанието е предприемане на стъпки преди сключване на договор по ваше искане (чл. 6, пар. 1, буква „б“ от Общия регламент за защита на данните, Регламент (ЕС) 2016/679). Не използваме данните за реклама и не ги продаваме.",
+     "We use the data only to answer your enquiry, prepare an offer and, if you wish, conclude a contract. The legal basis is taking steps at your request before entering into a contract (Art. 6(1)(b) of the General Data Protection Regulation, Regulation (EU) 2016/679). We do not use the data for advertising and we do not sell it.",
+     "Wir verwenden die Daten nur, um Ihre Anfrage zu beantworten, ein Angebot zu erstellen und, wenn Sie es wünschen, einen Vertrag abzuschließen. Rechtsgrundlage ist die Durchführung vorvertraglicher Maßnahmen auf Ihre Anfrage (Art. 6 Abs. 1 lit. b der Datenschutz-Grundverordnung, Verordnung (EU) 2016/679). Wir nutzen die Daten nicht für Werbung und verkaufen sie nicht."),
+    ("<h2>4. Колко време ги пазим</h2>", "<h2>4. How long we keep it</h2>", "<h2>4. Speicherdauer</h2>"),
+    ("Ако не сключим договор, изтриваме запитването до 12 месеца след последния ни контакт. Ако сключим договор, данните стават част от договорната документация и се пазят толкова, колкото изисква законът.",
+     "If no contract follows, we delete the enquiry within 12 months of our last contact. If we sign a contract, the data becomes part of the contract records and is kept for as long as the law requires.",
+     "Kommt kein Vertrag zustande, löschen wir die Anfrage spätestens 12 Monate nach dem letzten Kontakt. Kommt ein Vertrag zustande, werden die Daten Teil der Vertragsunterlagen und so lange aufbewahrt, wie es das Gesetz verlangt."),
+    ("<h2>5. Кой друг ги вижда</h2>", "<h2>5. Who else sees it</h2>", "<h2>5. Empfänger</h2>"),
+    ("За да работи сайтът, ползваме следните доставчици. Те обработват данни само от наше име:",
+     "To run the website we use the following providers. They process data only on our behalf:",
+     "Für den Betrieb der Website nutzen wir folgende Dienstleister. Sie verarbeiten Daten nur in unserem Auftrag:"),
+    ("<tr><th>Доставчик</th><th>За какво</th><th>Какви данни</th></tr>", "<tr><th>Provider</th><th>Purpose</th><th>Data</th></tr>", "<tr><th>Anbieter</th><th>Zweck</th><th>Daten</th></tr>"),
+    ("<td>Доставят запитването до нашата поща</td><td>Данните от формата</td>", "<td>Deliver the enquiry to our mailbox</td><td>The form data</td>", "<td>Zustellung der Anfrage an unser Postfach</td><td>Die Formulardaten</td>"),
+    ("<td>Проверка „Не съм робот“ срещу спам</td><td>Технически данни за браузъра и IP адрес</td>", "<td>“I am human” check against spam</td><td>Technical browser data and IP address</td>", "<td>„Ich bin kein Roboter“-Prüfung gegen Spam</td><td>Technische Browserdaten und IP-Adresse</td>"),
+    ("<td>Хостинг на сайта</td><td>IP адрес в техническите записи на сървъра</td>", "<td>Website hosting</td><td>IP address in the server’s technical logs</td>", "<td>Hosting der Website</td><td>IP-Adresse in den technischen Server-Protokollen</td>"),
+    ("Някои от тези доставчици са в САЩ. Предаването на данни става въз основа на Рамката за защита на данните между ЕС и САЩ или стандартни договорни клаузи на Европейската комисия.",
+     "Some of these providers are based in the USA. Transfers take place under the EU–US Data Privacy Framework or the European Commission’s standard contractual clauses.",
+     "Einige dieser Anbieter haben ihren Sitz in den USA. Die Übermittlung erfolgt auf Grundlage des EU-US-Datenschutzrahmens oder der Standardvertragsklauseln der Europäischen Kommission."),
+    ("<h2>6. Бисквитки и памет на браузъра</h2>", "<h2>6. Cookies and browser storage</h2>", "<h2>6. Cookies und Browserspeicher</h2>"),
+    ("Сайтът не използва рекламни или аналитични бисквитки. Шрифтовете се зареждат от нашия сървър, а не от външни услуги. Браузърът ви пази само броя изпратени запитвания за последния час, за да спрем масовото изпращане. Тази информация не напуска устройството ви. Проверката hCaptcha може да постави собствени бисквитки, необходими за защитата от ботове.",
+     "This website uses no advertising or analytics cookies. Fonts are loaded from our own server, not from third-party services. Your browser only stores how many enquiries were sent in the last hour, so we can stop mass submissions; this never leaves your device. The hCaptcha check may set its own cookies needed for bot protection.",
+     "Diese Website verwendet keine Werbe- oder Analyse-Cookies. Schriftarten werden von unserem eigenen Server geladen, nicht von Drittanbietern. Ihr Browser speichert nur, wie viele Anfragen in der letzten Stunde gesendet wurden, um Massensendungen zu verhindern; diese Information verlässt Ihr Gerät nicht. Die hCaptcha-Prüfung kann eigene, für den Schutz vor Bots notwendige Cookies setzen."),
+    ("<h2>7. Вашите права</h2>", "<h2>7. Your rights</h2>", "<h2>7. Ihre Rechte</h2>"),
+    ("Имате право да поискате достъп до данните си, тяхната поправка или изтриване, ограничаване на обработването, преносимост, както и да възразите срещу обработването. Пишете ни на",
+     "You have the right to access, correct or delete your data, to restrict processing, to data portability and to object to processing. Write to us at",
+     "Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Schreiben Sie uns an"),
+    (". Отговаряме до един месец.", ". We reply within one month.", ". Wir antworten innerhalb eines Monats."),
+    ("Ако смятате, че правата ви са нарушени, можете да подадете жалба до Комисията за защита на личните данни: София 1592, бул. „Проф. Цветан Лазаров“ № 2,",
+     "If you believe your rights have been violated, you can complain to the Bulgarian Commission for Personal Data Protection: 2 Prof. Tsvetan Lazarov Blvd., 1592 Sofia,",
+     "Wenn Sie der Ansicht sind, dass Ihre Rechte verletzt wurden, können Sie sich bei der bulgarischen Datenschutzkommission beschweren: Bul. Prof. Tsvetan Lazarov 2, 1592 Sofia,"),
+    ("<h2>8. Промени</h2>", "<h2>8. Changes</h2>", "<h2>8. Änderungen</h2>"),
+    ("При промяна на тази политика ще публикуваме новата версия на тази страница с нова дата.",
+     "If this policy changes, we will publish the new version on this page with a new date.",
+     "Bei Änderungen veröffentlichen wir die neue Fassung auf dieser Seite mit neuem Datum."),
+    ("← Към началната страница", "← Back to the home page", "← Zur Startseite"),
+    ("© 2026 СТМ „Лайф-04“ ООД", "© 2026 STM Life-04 Ltd", "© 2026 STM Life-04 OOD"),
+]
+
+PAGES = {
+    "index.html": {
+        "rows": T_INDEX,
+        "out": {"en": "en.html", "de": "de.html"},
+        "switch": {
+            "bg": '<a href="index.html" lang="bg" aria-current="page">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de">DE</a>',
+            "en": '<a href="index.html" lang="bg">BG</a><a href="en.html" lang="en" aria-current="page">EN</a><a href="de.html" lang="de">DE</a>',
+            "de": '<a href="index.html" lang="bg">BG</a><a href="en.html" lang="en">EN</a><a href="de.html" lang="de" aria-current="page">DE</a>',
+        },
+    },
+    "privacy.html": {
+        "rows": T_PRIVACY,
+        "out": {"en": "privacy-en.html", "de": "privacy-de.html"},
+        "switch": {
+            "bg": '<a href="privacy.html" lang="bg" aria-current="page">BG</a><a href="privacy-en.html" lang="en">EN</a><a href="privacy-de.html" lang="de">DE</a>',
+            "en": '<a href="privacy.html" lang="bg">BG</a><a href="privacy-en.html" lang="en" aria-current="page">EN</a><a href="privacy-de.html" lang="de">DE</a>',
+            "de": '<a href="privacy.html" lang="bg">BG</a><a href="privacy-en.html" lang="en">EN</a><a href="privacy-de.html" lang="de" aria-current="page">DE</a>',
+        },
+    },
 }
 
 # strings that are allowed to stay Cyrillic (Bulgarian email subject and sender name)
 KEEP = ("Запитване за безплатен преглед", "Сайт Лайф-04")
 
 
-def build(lang):
-    s = (SITE / "index.html").read_text(encoding="utf8")
+def build(src, lang):
+    page = PAGES[src]
+    s = (SITE / src).read_text(encoding="utf8")
     col = {"en": 1, "de": 2}[lang]
-    missing = [row[0] for row in T if row[0] not in s]
+    missing = [row[0] for row in page["rows"] if row[0] not in s]
+    if page["switch"]["bg"] not in s:
+        missing.append(page["switch"]["bg"])
     if missing:
-        sys.exit("Not found in index.html:\n  " + "\n  ".join(missing))
-    s = s.replace(SWITCH_BG, SWITCH[lang])
-    for row in sorted(T, key=lambda r: -len(r[0])):
+        sys.exit(f"Not found in {src}:\n  " + "\n  ".join(missing))
+    s = s.replace(page["switch"]["bg"], page["switch"][lang])
+    for row in sorted(page["rows"], key=lambda r: -len(r[0])):
         s = s.replace(row[0], row[col])
     leftover = [m for m in re.findall(r"[^\n]*[А-Яа-я][^\n]*", s) if not any(k in m for k in KEEP)]
     if leftover:
-        sys.exit(f"Untranslated text in {lang}:\n  " + "\n  ".join(x.strip() for x in leftover))
-    (SITE / f"{lang}.html").write_text(s, encoding="utf8")
-    print(f"wrote website/{lang}.html")
+        sys.exit(f"Untranslated text in {page['out'][lang]}:\n  " + "\n  ".join(x.strip() for x in leftover))
+    (SITE / page["out"][lang]).write_text(s, encoding="utf8")
+    print(f"wrote website/{page['out'][lang]}")
 
 
 if __name__ == "__main__":
-    for lang in ("en", "de"):
-        build(lang)
+    for src in PAGES:
+        for lang in ("en", "de"):
+            build(src, lang)

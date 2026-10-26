@@ -8,9 +8,8 @@
 <link rel="alternate" hreflang="bg" href="index.html">
 <link rel="alternate" hreflang="en" href="en.html">
 <link rel="alternate" hreflang="de" href="de.html">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts.css">
 <style>
 :root{
   --ink:#1E3D4A; --ink-2:#2B5363; --slate:#4A5D66; --muted:#5D7079;
@@ -246,6 +245,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
 textarea{min-height:96px;resize:vertical}
 form .btn{justify-content:center}
 .fine{font-size:.78rem;color:var(--muted)}
+.consent{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:.86rem;color:var(--slate);cursor:pointer}
+.consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);padding:0}
+.consent a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .h-captcha{min-height:78px}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .form-status{padding:14px 16px;border-radius:12px;font-weight:600;font-size:.93rem}
@@ -256,6 +258,8 @@ form .btn:disabled{opacity:.7;cursor:wait;transform:none}
 footer{background:#132A33;color:rgba(255,255,255,.6);padding:36px 0;font-size:.88rem}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 footer a{padding-block:12px}
+footer a:hover{color:#fff}
+.foot-links{display:flex;gap:20px;flex-wrap:wrap}
 
 /* reveal */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
@@ -669,6 +673,7 @@ footer a{padding-block:12px}
         </select>
       </label>
       <label>Съобщение<textarea name="Съобщение" id="f-msg" maxlength="2000" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
+      <label class="consent"><input type="checkbox" id="f-consent" required> <span>Запознах се с <a href="privacy.html" target="_blank" rel="noopener">Политиката за поверителност</a> и знам как ще бъдат използвани данните ми.</span></label>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="h-captcha" data-captcha="true" data-hl="bg" id="captcha"></div>
       <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
@@ -681,8 +686,8 @@ footer a{padding-block:12px}
 
 <footer>
   <div class="wrap">
-    <span>© <span id="y">2026</span> СТМ „Лайф-04“ ООД · Удостоверение № 052-3 от МЗ</span>
-    <a href="mailto:office@life-04.com">office@life-04.com</a>
+    <span>© <span id="y">2026</span> СТМ „Лайф-04“ ООД · ЕИК [предстои] · София 1309, ул. „Зайчар“ № 125 · Удостоверение № 052-3 от МЗ</span>
+    <span class="foot-links"><a href="privacy.html">Политика за поверителност</a><a href="mailto:office@life-04.com">office@life-04.com</a></span>
   </div>
 </footer>
 
