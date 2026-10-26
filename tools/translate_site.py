@@ -247,8 +247,8 @@ T_INDEX = [
     ("<h3>Оферта и договор</h3><p>Индивидуална оферта до 3 работни дни. При съгласие започваме в седмицата след подписване.</p>",
      "<h3>Offer and contract</h3><p>A tailored offer within 3 working days. Once agreed, we start the week after signing.</p>",
      "<h3>Angebot und Vertrag</h3><p>Individuelles Angebot innerhalb von 3 Arbeitstagen. Nach Zusage starten wir in der Woche nach der Unterzeichnung.</p>"),
-    ("Предстои ви проверка или смяна на досегашната служба? <a", "Facing an inspection or switching from your current provider? <a", "Steht eine Kontrolle an oder wechseln Sie Ihren bisherigen Dienst? <a"),
-    (">Поемаме и текущи случаи с кратък срок.</a>", ">We also take on urgent cases at short notice.</a>", ">Wir übernehmen auch dringende Fälle kurzfristig.</a>"),
+    ("Предстои ви проверка или смяна на досегашната служба? <strong>", "Facing an inspection or switching from your current provider? <strong>", "Steht eine Kontrolle an oder wechseln Sie Ihren bisherigen Dienst? <strong>"),
+    (">Поемаме и текущи случаи с кратък срок.</strong>", ">We also take on urgent cases at short notice.</strong>", ">Wir übernehmen auch dringende Fälle kurzfristig.</strong>"),
 
     # contact
     (">За контакт</span>", ">Contact</span>", ">Kontakt</span>"),
