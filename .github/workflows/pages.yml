@@ -1,9 +1,9 @@
 name: Publish website
 
-# Publishes the website/ folder to GitHub Pages on every push to main.
+# Publishes the website/ folder to GitHub Pages on every push to master.
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths: ["website/**"]
   workflow_dispatch:
 

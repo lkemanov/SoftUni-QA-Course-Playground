@@ -16,5 +16,5 @@ The Life-04 website has three language versions. Bulgarian pages are the source;
 - Then regenerate: `python3 tools/translate_site.py`. It must finish without errors (it stops on missing or untranslated text).
 - Before committing, check that all three pages load without errors and look right on desktop and phone width.
 - Email subjects from the contact form stay in Bulgarian with an (EN)/(DE) marker, because the office reads Bulgarian.
-- Publishing: `.github/workflows/pages.yml` deploys `website/` to GitHub Pages on every push to `main`.
+- Publishing: `.github/workflows/pages.yml` deploys `website/` to GitHub Pages on every push to `master`.
 - Fonts are self-hosted in `website/assets/fonts/`; do not load fonts or other assets from Google or other third-party CDNs (GDPR).
