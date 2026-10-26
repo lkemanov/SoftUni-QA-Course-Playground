@@ -678,7 +678,7 @@ footer a:hover{color:#fff}
       <div class="h-captcha" data-captcha="true" data-hl="bg" id="captcha"></div>
       <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
       <p class="form-status" id="status" role="status" aria-live="polite" hidden></p>
-      <p class="fine">Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на работния ден.</p>
+      <p class="fine">Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на 2 работни дни.</p>
     </form>
   </div>
 </section>
@@ -768,7 +768,7 @@ form.addEventListener('submit',async e=>{
     if(!r.ok||String(j.success)!=='true')throw new Error(j.message||r.status);
     writeLog([...log,Date.now()]);
     form.reset();
-    showStatus('Благодарим! Запитването е изпратено. Ще се свържем с вас в рамките на работния ден.',true);
+    showStatus('Благодарим! Запитването е изпратено. Ще се свържем с вас в рамките на 2 работни дни.',true);
   }catch(err){
     showStatus('Запитването не можа да бъде изпратено.'+fallback,false);
   }finally{

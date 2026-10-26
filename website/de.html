@@ -678,7 +678,7 @@ footer a:hover{color:#fff}
       <div class="h-captcha" data-captcha="true" data-hl="de" id="captcha"></div>
       <button class="btn btn-primary" type="submit" id="send">Anfrage senden <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
       <p class="form-status" id="status" role="status" aria-live="polite" hidden></p>
-      <p class="fine">Ihre Anfrage geht direkt an office@life-04.com. Wir melden uns innerhalb eines Arbeitstages.</p>
+      <p class="fine">Ihre Anfrage geht direkt an office@life-04.com. Wir melden uns innerhalb von 2 Arbeitstagen.</p>
     </form>
   </div>
 </section>
@@ -768,7 +768,7 @@ form.addEventListener('submit',async e=>{
     if(!r.ok||String(j.success)!=='true')throw new Error(j.message||r.status);
     writeLog([...log,Date.now()]);
     form.reset();
-    showStatus('Vielen Dank! Ihre Anfrage wurde gesendet. Wir melden uns innerhalb eines Arbeitstages.',true);
+    showStatus('Vielen Dank! Ihre Anfrage wurde gesendet. Wir melden uns innerhalb von 2 Arbeitstagen.',true);
   }catch(err){
     showStatus('Ihre Anfrage konnte nicht gesendet werden.'+fallback,false);
   }finally{
