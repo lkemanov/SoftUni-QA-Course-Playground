@@ -7,7 +7,6 @@
 <meta name="description" content="Life-04 – a registered occupational health service in Bulgaria since 2004. Risk assessment, health surveillance, training and health & safety documentation in 15 regions.">
 <link rel="alternate" hreflang="bg" href="index.html">
 <link rel="alternate" hreflang="en" href="en.html">
-<link rel="alternate" hreflang="de" href="de.html">
 <link rel="preload" href="assets/fonts/manrope-cyrillic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/fonts.css">
 <style>
@@ -28,7 +27,7 @@ h1,h2,h3{font-family:var(--serif);line-height:1.15;letter-spacing:-.01em;text-wr
 h1,h2,h3,p,li,span,label,strong,b{overflow-wrap:break-word}
 /* flex rows with bare text (icon + label): let one very long word break */
 .doc,.ind,.tab,.panel li,.one-contact p,.remote p{overflow-wrap:anywhere;hyphens:auto}
-/* grid and flex children may shrink below their longest word (long German compounds) */
+/* grid and flex children may shrink below their longest word */
 .wrap>*,.cards-3>*,.grid-4>*,.why-grid>*,.industries>*,.next .grid>*,.stats>*,.steps>*,.panel>*,.why-card>*,.pitem>*,.person>*,.hero-stat>*,.hero-card>*{min-width:0}
 h2{font-size:clamp(1.9rem,3.6vw,2.8rem);max-width:22ch}
 .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px}
@@ -59,14 +58,15 @@ header.scrolled .logo{color:var(--ink)}
 header.scrolled .menu a{color:var(--slate)}
 header.scrolled .menu a:hover{color:var(--accent)}
 .menu .btn{padding:10px 20px;color:#fff!important}
-.nav-phone{display:inline-flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:.93rem;white-space:nowrap;transition:.2s}
+.nav-phone{display:inline-flex;align-items:center;gap:8px;color:#fff;font-weight:700;font-size:.93rem;white-space:nowrap;transition:.2s;text-decoration:underline;text-decoration-color:var(--accent-2);text-decoration-thickness:2px;text-underline-offset:6px}
 .nav-phone svg{width:18px;height:18px;color:var(--accent-2)}
 header.scrolled .nav-phone{color:var(--ink)}
 header.scrolled .nav-phone svg{color:var(--accent)}
 .nav-end{display:flex;align-items:center;gap:24px}
 .lang{display:flex;gap:2px;padding:3px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2)}
-.lang a{padding:6px 11px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.04em;color:rgba(255,255,255,.85);transition:.2s}
+.lang a{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:999px;font-size:.78rem;font-weight:800;letter-spacing:.04em;color:rgba(255,255,255,.85);transition:.2s}
 .lang a:hover{color:#fff}
+.flag{width:20px;height:14px;border-radius:3px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.18)}
 .lang a[aria-current]{background:#fff;color:var(--ink)}
 header.scrolled .lang{background:var(--mist);border-color:var(--line)}
 header.scrolled .lang a{color:var(--slate)}
@@ -274,6 +274,12 @@ footer a:hover{color:#fff}
   .logo small{display:none}
   .lang a{padding:6px 9px}
 }
+@media (max-width:380px){
+  .lang a{padding:6px 7px;gap:5px}
+  .nav-end{gap:6px}
+  .logo{gap:8px;font-size:.95rem}
+  .logo-mark{width:34px;height:34px;border-radius:10px}
+}
 @media (prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 
 /* responsive */
@@ -374,7 +380,7 @@ footer a:hover{color:#fff}
       <span class="nav-phone"><svg class="i"><use href="#i-phone"/></svg>+359 897 932 200</span>
       <a href="#contact" class="btn btn-primary">Send enquiry</a>
     </nav>
-    <span class="lang" aria-label="Language"><a href="index.html" lang="bg">BG</a><a href="en.html" lang="en" aria-current="page">EN</a><a href="de.html" lang="de">DE</a></span>
+    <span class="lang" aria-label="Language"><a href="index.html" lang="bg"><svg class="flag" viewBox="0 0 5 3" aria-hidden="true"><rect width="5" height="1" fill="#fff"/><rect y="1" width="5" height="1" fill="#00966E"/><rect y="2" width="5" height="1" fill="#D62612"/></svg>BG</a><a href="en.html" lang="en" aria-current="page"><svg class="flag" viewBox="0 0 60 30" aria-hidden="true"><clipPath id="flag-uk"><path d="M30,15h30v15zv15h-30zh-30v-15zv-15h30z"/></clipPath><path d="M0,0v30h60v-30z" fill="#012169"/><path d="M0,0L60,30M60,0L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0L60,30M60,0L0,30" clip-path="url(#flag-uk)" stroke="#C8102E" stroke-width="4"/><path d="M30,0v30M0,15h60" stroke="#fff" stroke-width="10"/><path d="M30,0v30M0,15h60" stroke="#C8102E" stroke-width="6"/></svg>EN</a></span>
     <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><svg class="i" style="width:28px;height:28px"><use href="#i-menu"/></svg></button>
     </div>
   </div>

@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Regenerate English and German pages
+      - name: Regenerate English pages
         run: python3 tools/translate_site.py
       - name: Fail if a generated language page is out of date
         run: git diff --exit-code -- website
