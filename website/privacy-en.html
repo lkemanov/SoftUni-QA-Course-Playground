@@ -31,7 +31,7 @@ h1{font-family:var(--serif);font-size:clamp(1.8rem,4.5vw,2.8rem);line-height:1.1
 .updated{color:var(--muted);font-size:.9rem;margin-bottom:36px}
 h2{font-family:var(--serif);font-size:1.35rem;margin:40px 0 12px;line-height:1.3}
 p,li{color:var(--slate);overflow-wrap:break-word;hyphens:auto}
-p+p{margin-top:12px}
+p+p,ul+p,ul+div,.table-wrap+p,div+p{margin-top:12px}
 ul{padding-left:22px;display:grid;gap:6px;margin-top:10px}
 .note{background:var(--accent-soft);border-radius:14px;padding:18px 20px;margin-top:20px}
 .note p{color:var(--ink)}
@@ -40,6 +40,8 @@ table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.93rem}
 th,td{text-align:left;padding:12px 14px;overflow-wrap:anywhere;hyphens:auto;border-bottom:1px solid var(--line);vertical-align:top;color:var(--slate)}
 th{color:var(--ink);font-weight:700;background:var(--mist)}
 @media (max-width:480px){th,td{padding:10px 8px;font-size:.86rem}}
+mark.todo{background:#FFF1A8;color:var(--ink);padding:0 4px;border-radius:4px}
+strong{color:var(--ink)}
 .back{display:inline-flex;margin-top:48px;font-weight:700}
 footer{background:#132A33;color:rgba(255,255,255,.6);padding:28px 0;font-size:.88rem}
 </style>
@@ -54,46 +56,100 @@ footer{background:#132A33;color:rgba(255,255,255,.6);padding:28px 0;font-size:.8
 
 <main class="wrap">
   <h1>Privacy Policy</h1>
-  <p class="updated">Effective from 26 October 2026</p>
+  <p class="updated">Effective from 27 October 2026</p>
 
-  <p>This policy explains what personal data we collect through this website, why, and how we protect it. It covers only the website and the enquiry form. Health data of our clients’ employees is processed under separate rules agreed in the occupational health service contract.</p>
+  <h2>1. Scope</h2>
+  <p>This policy describes how STM Life-04 Ltd processes the personal data of website visitors and of people who send us an enquiry through the contact form.</p>
+  <p>This policy does not cover the health data of our clients’ employees. That data is processed as part of occupational health services under separate rules, communicated to the people concerned and set out in our client contracts.</p>
 
-  <h2>1. Who is responsible for your data</h2>
-  <p>STM Life-04 Ltd, company ID (EIK) 123673206, address: 125 Zaychar St., office 2, 1309 Sofia, Bulgaria. Email: <a href="mailto:office@life-04.com">office@life-04.com</a>, phone: +359 897 932 200.</p>
+  <h2>2. Controller and Data Protection Officer</h2>
+  <p><strong>Controller:</strong> STM Life-04 Ltd, company ID (EIK) 123673206, registered office: <mark class="todo">[as per the Commercial Register]</mark>. Correspondence address: 125 Zaychar St., office 2, 1309 Sofia, Bulgaria. Email: <a href="mailto:office@life-04.com">office@life-04.com</a>. Phone: +359 897 932 200.</p>
+  <p><strong>Data Protection Officer:</strong> <mark class="todo">[name]</mark>, email: <mark class="todo">[email]</mark>. You can contact them about any question concerning your personal data and your rights.</p>
 
-  <h2>2. What data we collect</h2>
-  <p>When you send an enquiry, we receive the data you enter in the form:</p>
+  <h2>3. What data we process</h2>
+  <p><strong>Data you enter in the form:</strong></p>
   <ul>
-    <li>name, company, phone and email;</li>
-    <li>number of employees and the text of your message.</li>
+    <li>company, phone and email (required);</li>
+    <li>name, number of employees and the text of your message (optional).</li>
   </ul>
-  <div class="note"><p>Please do not send health information about yourself or your employees through the form. It is not needed for an enquiry.</p></div>
+  <p><strong>Technical data:</strong> IP address, browser and device type, date and time of the visit. They are logged by the hosting provider and by the “I am human” check (hCaptcha).</p>
+  <p><strong>Data in browser storage:</strong> the times of enquiries sent in the last hour. They stay on your device and are not sent to us.</p>
+  <div class="note"><p><strong>Health data:</strong> we do not ask for it and it is not needed for an enquiry. Please do not include information about your health or anyone else’s in your message. If we receive such information anyway, we will not use it and will delete it without undue delay.</p></div>
 
-  <h2>3. Why we use it and on what legal basis</h2>
-  <p>We use the data only to answer your enquiry, prepare an offer and, if you wish, conclude a contract. The legal basis is taking steps at your request before entering into a contract (Art. 6(1)(b) of the General Data Protection Regulation, Regulation (EU) 2016/679). We do not use the data for advertising and we do not sell it.</p>
-
-  <h2>4. How long we keep it</h2>
-  <p>If no contract follows, we delete the enquiry within 12 months of our last contact. If we sign a contract, the data becomes part of the contract records and is kept for as long as the law requires.</p>
-
-  <h2>5. Who else sees it</h2>
-  <p>To run the website we use the following providers. They process data only on our behalf:</p>
+  <h2>4. Purposes and legal bases</h2>
+  <p>We use the data only for the purposes below. We do not use it for advertising and we do not sell it.</p>
   <div class="table-wrap"><table>
-    <tr><th>Provider</th><th>Purpose</th><th>Data</th></tr>
-    <tr><td>FormSubmit / Web3Forms</td><td>Deliver the enquiry to our mailbox</td><td>The form data</td></tr>
-    <tr><td>hCaptcha (Intuition Machines)</td><td>“I am human” check against spam</td><td>Technical browser data and IP address</td></tr>
-    <tr><td>GitHub Pages (GitHub Inc.)</td><td>Website hosting</td><td>IP address in the server’s technical logs</td></tr>
+    <tr><th>Purpose</th><th>Legal basis (Regulation (EU) 2016/679)</th></tr>
+    <tr><td>Answering your enquiry, preparing an offer and negotiating a contract</td><td>If you enquire in your own name: steps taken at your request before entering into a contract (Art. 6(1)(b)). If you write on behalf of a company: our legitimate interest in replying to the representative of a prospective client (Art. 6(1)(f)).</td></tr>
+    <tr><td>Protecting the form and the website from spam, abuse and attacks</td><td>Our legitimate interest in keeping the website secure and working (Art. 6(1)(f)).</td></tr>
+    <tr><td>Complying with legal obligations, such as accounting after a contract is signed</td><td>Legal obligation (Art. 6(1)(c)).</td></tr>
+    <tr><td>Establishing, exercising or defending legal claims</td><td>Our legitimate interest (Art. 6(1)(f)).</td></tr>
   </table></div>
-  <p>Some of these providers are based in the USA. Transfers take place under the EU–US Data Privacy Framework or the European Commission’s standard contractual clauses.</p>
 
-  <h2>6. Cookies and browser storage</h2>
-  <p>This website uses no advertising or analytics cookies. Fonts are loaded from our own server, not from third-party services. Your browser only stores how many enquiries were sent in the last hour, so we can stop mass submissions; this never leaves your device. The hCaptcha check may set its own cookies needed for bot protection.</p>
+  <h2>5. Required data</h2>
+  <p>Providing data through the form is voluntary. There is no legal or contractual obligation to provide it.</p>
+  <p>Company, phone and email are needed so we can reply. Without them the form cannot be sent. You can also write to us at <a href="mailto:office@life-04.com">office@life-04.com</a> or call +359 897 932 200.</p>
 
-  <h2>7. Your rights</h2>
-  <p>You have the right to access, correct or delete your data, to restrict processing, to data portability and to object to processing. Write to us at <a href="mailto:office@life-04.com">office@life-04.com</a>. We reply within one month.</p>
-  <p>If you believe your rights have been violated, you can complain to the Bulgarian Commission for Personal Data Protection: 2 Prof. Tsvetan Lazarov Blvd., 1592 Sofia, <a href="https://www.cpdp.bg" target="_blank" rel="noopener">www.cpdp.bg</a>.</p>
+  <h2>6. Retention periods</h2>
+  <div class="table-wrap"><table>
+    <tr><th>Data</th><th>Period</th></tr>
+    <tr><td>Enquiry not followed by a contract</td><td>Up to 12 months after the last contact.</td></tr>
+    <tr><td>Enquiry followed by a contract</td><td>For the term of the contract and 5 years after it ends (the general limitation period under Art. 110 of the Bulgarian Obligations and Contracts Act).</td></tr>
+    <tr><td>Accounting records for a signed contract</td><td>10 years (Art. 12 of the Bulgarian Accountancy Act).</td></tr>
+    <tr><td>Technical data in hosting and hCaptcha logs</td><td>According to the periods set by the provider concerned.</td></tr>
+    <tr><td>Data in browser storage</td><td>Used only for the last hour. You can delete them in your browser settings.</td></tr>
+  </table></div>
+  <p>If a dispute or inspection is under way, we keep the data needed until it is closed. When the period ends, the data is deleted or anonymised.</p>
 
-  <h2>8. Changes</h2>
-  <p>If this policy changes, we will publish the new version on this page with a new date.</p>
+  <h2>7. Recipients</h2>
+  <p>Only the company’s staff who answer enquiries have access to the data. To run the website we use the following processors. They process data only on our instructions and are bound by a contract under Art. 28 of the Regulation.</p>
+  <div class="table-wrap"><table>
+    <tr><th>Processor</th><th>Purpose</th><th>Data</th></tr>
+    <tr><td>FormSubmit</td><td>Delivers the enquiry to our mailbox</td><td>The form data</td></tr>
+    <tr><td>Web3Forms</td><td>Loads the “I am human” check on the page</td><td>IP address and technical browser data</td></tr>
+    <tr><td>Intuition Machines, Inc. (hCaptcha), USA</td><td>“I am human” check</td><td>IP address, technical browser data and interactions</td></tr>
+    <tr><td>GitHub, Inc., USA</td><td>Website hosting</td><td>IP address in the server’s technical logs</td></tr>
+    <tr><td>The company’s email service provider</td><td>Storing enquiry emails</td><td>The form data and correspondence</td></tr>
+  </table></div>
+  <p>We may also disclose data to public authorities where the law requires it, and to lawyers and auditors bound by confidentiality.</p>
+
+  <h2>8. Transfers outside the European Economic Area</h2>
+  <p>Some processors are in the USA or other countries outside the EEA. We transfer data to them only with one of the following safeguards:</p>
+  <ul>
+    <li>an adequacy decision of the European Commission (Art. 45), including the EU–US Data Privacy Framework where the recipient is certified under it;</li>
+    <li>standard contractual clauses adopted by the European Commission (Art. 46(2)(c)).</li>
+  </ul>
+  <p>On request we will tell you which safeguard applies to each recipient and give you a copy of it.</p>
+
+  <h2>9. Cookies and browser storage</h2>
+  <p>This website uses no advertising or analytics cookies. Fonts are loaded from our own server, not from third-party services.</p>
+  <p>We only use storage that is strictly necessary for sending an enquiry and preventing abuse. No consent is required for it (Art. 4a(2) of the Bulgarian Electronic Communications Act):</p>
+  <div class="table-wrap"><table>
+    <tr><th>Item</th><th>Set by</th><th>Purpose</th><th>Duration</th></tr>
+    <tr><td>Number of enquiries sent (browser storage)</td><td>This website</td><td>Stops mass submissions from one device</td><td>Used only for the last hour</td></tr>
+    <tr><td>hCaptcha cookies</td><td>Intuition Machines, Inc.</td><td>Detects automated requests</td><td>As set in hCaptcha’s policy</td></tr>
+  </table></div>
+  <p>You can delete these items at any time in your browser settings. Without them the form may not be sent.</p>
+
+  <h2>10. Your rights</h2>
+  <p>You have the right to request:</p>
+  <ul>
+    <li>access to your data and a copy of it (Art. 15);</li>
+    <li>correction of inaccurate data (Art. 16);</li>
+    <li>erasure (Art. 17);</li>
+    <li>restriction of processing (Art. 18);</li>
+    <li>portability of the data you gave us (Art. 20).</li>
+  </ul>
+  <p><strong>Right to object (Art. 21).</strong> You can object at any time to processing based on our legitimate interest. We will stop unless we have compelling legitimate grounds that override your interests, or the data is needed for a legal claim.</p>
+  <p>We do not make decisions based solely on automated processing and we do not carry out profiling (Art. 22).</p>
+  <p><strong>How to exercise your rights.</strong> Write to <a href="mailto:office@life-04.com">office@life-04.com</a> or to our Data Protection Officer. We reply free of charge within one month. For complex or numerous requests this can be extended by up to two months, and we will tell you if so (Art. 12(3)). We may ask you to confirm your identity so that we do not disclose data to someone else.</p>
+  <p><strong>Complaints.</strong> If you believe your rights have been violated, you can complain to the Bulgarian Commission for Personal Data Protection: 2 Prof. Tsvetan Lazarov Blvd., 1592 Sofia, <a href="https://www.cpdp.bg" target="_blank" rel="noopener">www.cpdp.bg</a>. You can also seek a remedy in court (Art. 79).</p>
+
+  <h2>11. Security</h2>
+  <p>The website runs only over a secure connection (HTTPS). Access to the enquiry mailbox is limited to the staff who answer enquiries and is password-protected. In the event of a personal data breach we act under Art. 33 and 34 of the Regulation.</p>
+
+  <h2>12. Changes</h2>
+  <p>If this policy changes, we publish the new version on this page with a new effective date. For significant changes we will inform the people we are in active contact with.</p>
 
   <a class="back" href="en.html">← Back to the home page</a>
 </main>
