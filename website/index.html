@@ -592,6 +592,10 @@ footer a:hover{color:#fff}
       <div class="logo-tile"><img src="assets/clients/eti.png" alt="ETI"></div>
       <div class="logo-tile"><img src="assets/clients/pobeda.png" alt="Победа"></div>
       <div class="logo-tile"><img src="assets/clients/iag.png" alt="ИАГ"></div>
+      <div class="logo-tile"><img src="assets/clients/adecco.png" alt="Adecco"></div>
+      <div class="logo-tile"><img src="assets/clients/bmc.png" alt="BMC"></div>
+      <div class="logo-tile"><img src="assets/clients/mtk.png" alt="MTK"></div>
+      <div class="logo-tile"><img src="assets/clients/alphabet.png" alt="alphaBET Gaming"></div>
     </div>
   </div>
 </section>
@@ -765,8 +769,9 @@ tabs.forEach(t=>t.addEventListener('click',()=>{
 
 // duplicate logos for seamless marquee
 const track=document.getElementById('track');
+const logos=track.children.length;
 track.innerHTML+=track.innerHTML;
-track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=12)el.setAttribute('aria-hidden','true')});
+track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=logos)el.setAttribute('aria-hidden','true')});
 
 // contact form -> sends straight to office@life-04.com
 // Spam protection: honeypot field, minimum fill time, limits per browser, link filter.
