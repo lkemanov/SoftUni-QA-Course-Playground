@@ -17,6 +17,8 @@ SITE = Path(__file__).resolve().parent.parent / "website"
 T_INDEX = [
     # head, navigation, accessibility labels
     ('<html lang="bg">', '<html lang="en">'),
+    ('<link rel="canonical" href="https://www.life-04.com/">',
+     '<link rel="canonical" href="https://www.life-04.com/en.html">'),
     ("<title>СТМ Лайф-04 | Служба по трудова медицина</title>",
      "<title>Life-04 | Occupational Health Service</title>"),
     ("СТМ „Лайф-04“ ООД – регистрирана служба по трудова медицина от 2004 г. Оценка на риска, медицинско наблюдение, обучения и документация по ЗЗБУТ в 15 области на България.",
