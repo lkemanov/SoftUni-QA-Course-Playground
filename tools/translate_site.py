@@ -245,7 +245,6 @@ T_INDEX = [
      "<option>up to 10</option><option>11 – 50</option><option>51 – 250</option><option>over 250</option>"),
     ('<label>Съобщение<textarea name="Съобщение"', '<label>Message<textarea name="Message"'),
     ('placeholder="Обекти, дейност, предстояща проверка…"', 'placeholder="Sites, line of business, upcoming inspection…"'),
-    ('data-hl="bg"', 'data-hl="en"'),
     (">Изпратете запитване <svg", ">Send enquiry <svg"),
     ("Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на 2 работни дни.",
      "Your enquiry goes straight to office@life-04.com. We will get back to you within 2 working days."),
@@ -271,6 +270,7 @@ T_INDEX = [
     ("'Достигнат е лимитът от запитвания за един час.'", "'You have reached the limit of enquiries for this hour.'"),
     ("'Моля, премахнете връзките (линковете) от съобщението.'", "'Please remove the links from your message.'"),
     ("'Моля, потвърдете, че не сте робот.'", "'Please confirm that you are not a robot.'"),
+    ('id="f-robot"> Не съм робот</label>', 'id="f-robot"> I am not a robot</label>'),
     ("'Запитването не можа да бъде изпратено.'", "'Your enquiry could not be sent.'"),
     ("send.textContent='Изпращане…'", "send.textContent='Sending…'"),
     # the office reads Bulgarian: keep the email subject in Bulgarian, marked with the page language
@@ -320,8 +320,8 @@ T_PRIVACY = [
      '<li>company, phone and email (required);</li>'),
     ('<li>име, брой служители и текст на съобщението (по желание).</li>',
      '<li>name, number of employees and the text of your message (optional).</li>'),
-    ('<p><strong>Технически данни:</strong> IP адрес, вид браузър и устройство, дата и час на посещението. Те се записват от хостинг доставчика и при проверката „Не съм робот“ (hCaptcha).</p>',
-     '<p><strong>Technical data:</strong> IP address, browser and device type, date and time of the visit. They are logged by the hosting provider and by the “I am human” check (hCaptcha).</p>'),
+    ('<p><strong>Технически данни:</strong> IP адрес, вид браузър и устройство, дата и час на посещението. Те се записват от хостинг доставчика.</p>',
+     '<p><strong>Technical data:</strong> IP address, browser and device type, date and time of the visit. They are logged by the hosting provider.</p>'),
     ('<p><strong>Данни в паметта на браузъра:</strong> часовете на изпратените запитвания през последния час. Те остават на вашето устройство и не се изпращат към нас.</p>',
      '<p><strong>Data in browser storage:</strong> the times of enquiries sent in the last hour. They stay on your device and are not sent to us.</p>'),
     ('<p><strong>Здравни данни:</strong> не ги искаме и не са нужни за запитването. Моля, не включвайте в съобщението информация за здравето си или на други лица. Ако все пак получим такава информация, няма да я използваме и ще я изтрием без необосновано забавяне.</p>',
@@ -350,8 +350,8 @@ T_PRIVACY = [
      '<tr><td>Enquiry not followed by a contract</td><td>Up to 12 months after the last contact.</td></tr>'),
     ('<tr><td>Запитване, след което е сключен договор</td><td>Данните преминават към раздел В и се пазят по сроковете там.</td></tr>',
      '<tr><td>Enquiry followed by a contract</td><td>The data moves to Section C and is kept for the periods set out there.</td></tr>'),
-    ('<tr><td>Технически данни в записите на хостинга и hCaptcha</td><td>Според сроковете, определени от съответния доставчик.</td></tr>',
-     '<tr><td>Technical data in hosting and hCaptcha logs</td><td>According to the periods set by the provider concerned.</td></tr>'),
+    ('<tr><td>Технически данни в записите на хостинга</td><td>Според сроковете, определени от хостинг доставчика.</td></tr>',
+     '<tr><td>Technical data in hosting logs</td><td>According to the periods set by the hosting provider.</td></tr>'),
     ('<tr><td>Данни в паметта на браузъра</td><td>Използват се само за последния час. Можете да ги изтриете през настройките на браузъра си.</td></tr>',
      '<tr><td>Data in browser storage</td><td>Used only for the last hour. You can delete it in your browser settings.</td></tr>'),
     ('<h3>А.5. Обработващи</h3>',
@@ -362,10 +362,6 @@ T_PRIVACY = [
      '<tr><th>Processor</th><th>Purpose</th><th>Data</th></tr>'),
     ('<tr><td>FormSubmit</td><td>Доставя запитването до нашата поща</td><td>Данните от формата</td></tr>',
      '<tr><td>FormSubmit</td><td>Delivers the enquiry to our mailbox</td><td>The form data</td></tr>'),
-    ('<tr><td>Web3Forms</td><td>Зарежда проверката „Не съм робот“ на страницата</td><td>IP адрес и технически данни за браузъра</td></tr>',
-     '<tr><td>Web3Forms</td><td>Loads the “I am human” check on the page</td><td>IP address and technical browser data</td></tr>'),
-    ('<tr><td>Intuition Machines, Inc. (hCaptcha), САЩ</td><td>Проверка „Не съм робот“</td><td>IP адрес, технически данни за браузъра и действията в него</td></tr>',
-     '<tr><td>Intuition Machines, Inc. (hCaptcha), USA</td><td>“I am human” check</td><td>IP address, technical browser data and interactions</td></tr>'),
     ('<tr><td>GitHub, Inc., САЩ</td><td>Хостинг на сайта</td><td>IP адрес в техническите записи на сървъра</td></tr>',
      '<tr><td>GitHub, Inc., USA</td><td>Website hosting</td><td>IP address in the server’s technical logs</td></tr>'),
     ('<tr><td>Доставчик на имейл услугите на дружеството</td><td>Съхранение на имейлите със запитвания</td><td>Данните от формата и кореспонденцията</td></tr>',
@@ -378,8 +374,6 @@ T_PRIVACY = [
      '<tr><th>Item</th><th>Set by</th><th>Purpose</th><th>Duration</th></tr>'),
     ('<tr><td>Брой изпратени запитвания (памет на браузъра)</td><td>Сайтът</td><td>Спира масовото изпращане от едно устройство</td><td>Използва се само за последния час</td></tr>',
      '<tr><td>Number of enquiries sent (browser storage)</td><td>This website</td><td>Stops mass submissions from one device</td><td>Used only for the last hour</td></tr>'),
-    ('<tr><td>Бисквитки на hCaptcha</td><td>Intuition Machines, Inc.</td><td>Разпознава автоматизирани заявки</td><td>Според политиката на hCaptcha</td></tr>',
-     '<tr><td>hCaptcha cookies</td><td>Intuition Machines, Inc.</td><td>Detects automated requests</td><td>As set in hCaptcha’s policy</td></tr>'),
     ('<p>Можете да изтриете тези записи по всяко време през настройките на браузъра си. Без тях формата може да не се изпрати.</p>',
      '<p>You can delete these items at any time in your browser settings. Without them the form may not be sent.</p>'),
     ('<h2>РАЗДЕЛ Б. Работещи, които получават трудовомедицинско обслужване</h2>',
@@ -564,8 +558,8 @@ PAGES = {
     },
 }
 
-# strings that are allowed to stay Cyrillic (Bulgarian email subject and sender name)
-KEEP = ("Запитване за безплатен преглед", "Сайт Лайф-04")
+# strings that are allowed to stay Cyrillic (Bulgarian email subject)
+KEEP = ("Запитване за безплатен преглед",)
 
 
 def build(src):

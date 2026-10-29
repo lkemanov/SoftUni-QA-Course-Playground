@@ -264,7 +264,8 @@ form .btn{justify-content:center}
 .consent{display:flex;gap:10px;align-items:flex-start;font-weight:500;font-size:.86rem;color:var(--slate);cursor:pointer}
 .consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--accent);padding:0}
 .consent a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
-.h-captcha{min-height:78px}
+.robot{display:flex;align-items:center;gap:12px;width:fit-content;padding:12px 18px 12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--mist);font-weight:600;font-size:.93rem;color:var(--ink);cursor:pointer;user-select:none}
+.robot input{width:22px;height:22px;flex:none;margin:0;accent-color:var(--accent);padding:0;cursor:pointer}
 .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
 .form-status{padding:14px 16px;border-radius:12px;font-weight:600;font-size:.93rem}
 .form-status.ok{background:#E3F1EA;color:#25704A}
@@ -723,7 +724,7 @@ footer a:hover{color:#fff}
       <label>Съобщение<textarea name="Съобщение" id="f-msg" maxlength="2000" placeholder="Обекти, дейност, предстояща проверка…"></textarea></label>
       <label class="consent"><input type="checkbox" id="f-consent" required> <span>Запознах се с <a href="privacy.html" target="_blank" rel="noopener">Политиката за поверителност</a> и знам как ще бъдат използвани данните ми.</span></label>
       <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <div class="h-captcha" data-captcha="true" data-hl="bg" id="captcha"></div>
+      <label class="robot"><input type="checkbox" id="f-robot"> Не съм робот</label>
       <button class="btn btn-primary" type="submit" id="send">Изпратете запитване <svg class="i" style="width:18px;height:18px"><use href="#i-arrow"/></svg></button>
       <p class="form-status" id="status" role="status" aria-live="polite" hidden></p>
       <p class="fine">Запитването се изпраща директно до office@life-04.com. Ще се свържем с вас в рамките на 2 работни дни.</p>
@@ -776,16 +777,17 @@ track.innerHTML+=track.innerHTML;
 track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=logos)el.setAttribute('aria-hidden','true')});
 
 // contact form -> sends straight to office@life-04.com
-// Spam protection: honeypot field, minimum fill time, limits per browser, link filter.
-// hCaptcha (Web3Forms) is always shown. Paste the Web3Forms access key for office@life-04.com below
-// so submissions go through Web3Forms, which also verifies the captcha on its server.
-const WEB3FORMS_KEY='';
+// Spam protection: honeypot field, "not a robot" tick (must be a real click), minimum fill time,
+// limits per browser, link filter.
 // After FormSubmit activation you can replace the address with the private alias it emails you.
 const FORMSUBMIT_ENDPOINT='https://formsubmit.co/ajax/office@life-04.com';
 const MIN_FILL_MS=4000, GAP_MS=60*1000, MAX_PER_HOUR=3;
 
 const form=document.getElementById('form'),send=document.getElementById('send'),status=document.getElementById('status');
 const sendLabel=send.innerHTML, openedAt=Date.now();
+const robot=document.getElementById('f-robot');
+let humanTick=false;
+robot.addEventListener('change',e=>{humanTick=e.isTrusted&&robot.checked});
 const showStatus=(msg,ok)=>{status.textContent=msg;status.className='form-status '+(ok?'ok':'err');status.hidden=false};
 const fallback=' Можете да пишете и на office@life-04.com или да се обадите на +359 897 932 200.';
 
@@ -804,30 +806,26 @@ form.addEventListener('submit',async e=>{
   if(log.length>=MAX_PER_HOUR){showStatus('Достигнат е лимитът от запитвания за един час.'+fallback,false);return}
   if((document.getElementById('f-phone').value.match(/\d/g)||[]).length<6){showStatus('Моля, въведете валиден телефонен номер.',false);return}
   if((document.getElementById('f-msg').value.match(/https?:\/\/|www\./gi)||[]).length>1){showStatus('Моля, премахнете връзките (линковете) от съобщението.',false);return}
-  if(!data['h-captcha-response']){showStatus('Моля, потвърдете, че не сте робот.',false);return}
+  if(!robot.checked||!humanTick){showStatus('Моля, потвърдете, че не сте робот.',false);robot.focus();return}
 
   const subject='Запитване за безплатен преглед – '+document.getElementById('f-company').value;
-  let url,payload;
-  if(WEB3FORMS_KEY){url='https://api.web3forms.com/submit';payload={...data,access_key:WEB3FORMS_KEY,subject,from_name:'Сайт Лайф-04',replyto:data.email}}
-  else{delete data['h-captcha-response'];url=FORMSUBMIT_ENDPOINT;payload={...data,_subject:subject,_template:'table'}}
+  const payload={...data,_subject:subject,_template:'table'};
 
   send.disabled=true;send.textContent='Изпращане…';status.hidden=true;
   try{
-    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
+    const r=await fetch(FORMSUBMIT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(payload)});
     const j=await r.json().catch(()=>({}));
     if(!r.ok||String(j.success)!=='true')throw new Error(j.message||r.status);
     writeLog([...log,Date.now()]);
-    form.reset();
+    form.reset();humanTick=false;
     showStatus('Благодарим! Запитването е изпратено. Ще се свържем с вас в рамките на 2 работни дни.',true);
   }catch(err){
     showStatus('Запитването не можа да бъде изпратено.'+fallback,false);
   }finally{
     send.disabled=false;send.innerHTML=sendLabel;
-    if(window.hcaptcha)try{hcaptcha.reset()}catch{}
   }
 });
 document.getElementById('y').textContent=new Date().getFullYear();
 </script>
-<script src="https://web3forms.com/client/script.js" async defer></script>
 </body>
 </html>
