@@ -821,6 +821,9 @@ form.addEventListener('submit',async e=>{
     showStatus('Thank you! Your enquiry has been sent. We will get back to you within 2 working days.',true);
   }catch(err){
     showStatus('Your enquiry could not be sent.'+fallback,false);
+    // open the page with ?debug=1 to see why sending failed; visitors never see this
+    console.warn('Form send failed:',err.message);
+    if(new URLSearchParams(location.search).has('debug'))status.textContent+=' ['+err.message+']';
   }finally{
     send.disabled=false;send.innerHTML=sendLabel;
   }
