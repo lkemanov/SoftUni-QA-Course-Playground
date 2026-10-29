@@ -824,7 +824,6 @@ form.addEventListener('submit',async e=>{
       // the background send was blocked (network, browser extension): post the form the classic way;
       // Web3Forms then returns the visitor to this page with ?sent=1
       if(debug)throw netErr;
-      writeLog([...log,Date.now()]);
       classicSend(payload);
       return;
     }
@@ -850,6 +849,8 @@ function classicSend(payload){
   document.body.appendChild(f);f.submit();
 }
 if(new URLSearchParams(location.search).has('sent')){
+  // count the enquiry only once Web3Forms has confirmed it by redirecting back here
+  writeLog([...readLog(),Date.now()]);
   showStatus('Thank you! Your enquiry has been sent. We will get back to you within 2 working days.',true);
   history.replaceState(null,'',location.pathname);
   form.scrollIntoView({block:'center'});
