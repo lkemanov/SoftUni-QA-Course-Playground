@@ -815,11 +815,10 @@ form.addEventListener('submit',async e=>{
   send.disabled=true;send.textContent='Sending…';status.hidden=true;
   const debug=new URLSearchParams(location.search).has('debug');
   try{
-    // FormData keeps this a "simple" cross-site request, so the browser sends no preflight first
-    const body=new FormData();
-    for(const[k,v]of Object.entries(payload))body.append(k,v);
+    // JSON, as Web3Forms documents it: multipart form data garbled the Cyrillic field names in the email
+    const body=JSON.stringify(payload);
     let r;
-    try{r=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body})}
+    try{r=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body})}
     catch(netErr){
       // the background send was blocked (network, browser extension): post the form the classic way;
       // Web3Forms then returns the visitor to this page with ?sent=1
