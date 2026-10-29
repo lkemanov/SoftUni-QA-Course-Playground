@@ -360,8 +360,8 @@ T_PRIVACY = [
      '<p>To run the website we use the following processors. They process data only on our instructions and are bound by a contract under Art. 28 of the Regulation.</p>'),
     ('<tr><th>Обработващ</th><th>За какво</th><th>Какви данни</th></tr>',
      '<tr><th>Processor</th><th>Purpose</th><th>Data</th></tr>'),
-    ('<tr><td>FormSubmit</td><td>Доставя запитването до нашата поща</td><td>Данните от формата</td></tr>',
-     '<tr><td>FormSubmit</td><td>Delivers the enquiry to our mailbox</td><td>The form data</td></tr>'),
+    ('<tr><td>Web3Forms</td><td>Доставя запитването до нашата поща</td><td>Данните от формата</td></tr>',
+     '<tr><td>Web3Forms</td><td>Delivers the enquiry to our mailbox</td><td>The form data</td></tr>'),
     ('<tr><td>GitHub, Inc., САЩ</td><td>Хостинг на сайта</td><td>IP адрес в техническите записи на сървъра</td></tr>',
      '<tr><td>GitHub, Inc., USA</td><td>Website hosting</td><td>IP address in the server’s technical logs</td></tr>'),
     ('<tr><td>Доставчик на имейл услугите на дружеството</td><td>Съхранение на имейлите със запитвания</td><td>Данните от формата и кореспонденцията</td></tr>',
@@ -558,8 +558,8 @@ PAGES = {
     },
 }
 
-# strings that are allowed to stay Cyrillic (Bulgarian email subject)
-KEEP = ("Запитване за безплатен преглед",)
+# strings that are allowed to stay Cyrillic (Bulgarian email subject and sender name)
+KEEP = ("Запитване за безплатен преглед", "Сайт Лайф-04")
 
 
 def build(src):

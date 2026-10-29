@@ -779,8 +779,9 @@ track.querySelectorAll('.logo-tile').forEach((el,i)=>{if(i>=logos)el.setAttribut
 // contact form -> sends straight to office@life-04.com
 // Spam protection: honeypot field, "not a robot" tick (must be a real click), minimum fill time,
 // limits per browser, link filter.
-// After FormSubmit activation you can replace the address with the private alias it emails you.
-const FORMSUBMIT_ENDPOINT='https://formsubmit.co/ajax/office@life-04.com';
+// Web3Forms delivers the enquiry to office@life-04.com. The access key only allows sending to that mailbox.
+const WEB3FORMS_ENDPOINT='https://api.web3forms.com/submit';
+const WEB3FORMS_KEY='b1ecb0f7-f15e-42fe-95d4-d33c79a00064';
 const MIN_FILL_MS=4000, GAP_MS=60*1000, MAX_PER_HOUR=3;
 
 const form=document.getElementById('form'),send=document.getElementById('send'),status=document.getElementById('status');
@@ -809,7 +810,7 @@ form.addEventListener('submit',async e=>{
   if(!robot.checked||!humanTick){showStatus('Please confirm that you are not a robot.',false);robot.focus();return}
 
   const subject='Запитване за безплатен преглед (EN) – '+document.getElementById('f-company').value;
-  const payload={...data,_subject:subject,_template:'table'};
+  const payload={access_key:WEB3FORMS_KEY,subject,from_name:'Сайт Лайф-04',...data};
 
   send.disabled=true;send.textContent='Sending…';status.hidden=true;
   const debug=new URLSearchParams(location.search).has('debug');
@@ -818,10 +819,10 @@ form.addEventListener('submit',async e=>{
     const body=new FormData();
     for(const[k,v]of Object.entries(payload))body.append(k,v);
     let r;
-    try{r=await fetch(FORMSUBMIT_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body})}
+    try{r=await fetch(WEB3FORMS_ENDPOINT,{method:'POST',headers:{Accept:'application/json'},body})}
     catch(netErr){
       // the background send was blocked (network, browser extension): post the form the classic way;
-      // FormSubmit then returns the visitor to this page with ?sent=1
+      // Web3Forms then returns the visitor to this page with ?sent=1
       if(debug)throw netErr;
       writeLog([...log,Date.now()]);
       classicSend(payload);
@@ -843,8 +844,8 @@ form.addEventListener('submit',async e=>{
 });
 function classicSend(payload){
   const f=document.createElement('form');
-  f.method='POST';f.action=FORMSUBMIT_ENDPOINT.replace('/ajax/','/');f.hidden=true;
-  const fields={...payload,_captcha:'false',_next:location.origin+location.pathname+'?sent=1'};
+  f.method='POST';f.action=WEB3FORMS_ENDPOINT;f.hidden=true;
+  const fields={...payload,redirect:location.origin+location.pathname+'?sent=1'};
   for(const[k,v]of Object.entries(fields)){const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;f.appendChild(i)}
   document.body.appendChild(f);f.submit();
 }
